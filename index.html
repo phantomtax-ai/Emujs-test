@@ -21,6 +21,11 @@
   <div id="dropzone">Drop your ROM file here</div>
   <div id="emulator"></div>
 
+  <div id="controls">
+  <button onclick="EJS_saveState()">💾 Save</button>
+  <button onclick="EJS_loadState()">📂 Load</button>
+</div>
+  
   <script>
     const dropzone = document.getElementById("dropzone");
 

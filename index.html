@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag & Drop Emulator</title>
+  <script src="emulatorjs/data/loader.js"></script>
+  <style>
+    #dropzone {
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      color: #555;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="dropzone">Drop your ROM file here</div>
+  <div id="emulator"></div>
 
+  <script>
+    const dropzone = document.getElementById("dropzone");
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = "#00f";
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.style.borderColor = "#aaa";
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = "#aaa";
+
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const arrayBuffer = event.target.result;
+
+        EJS_player = "#emulator";
+        EJS_core = detectCore(file.name); // Auto-detect core from file extension
+        EJS_pathtodata = "emulatorjs/data/";
+        EJS_gameData = arrayBuffer;
+        EJS_startOnLoaded = true;
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function detectCore(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      if (ext === "nes") return "nes";
+      if (ext === "gba") return "gba";
+      if (ext === "gb" || ext === "gbc") return "gb";
+      if (ext === "n64" || ext === "z64") return "n64";
+      if (ext === "smc" || ext === "sfc") return "snes";
+      return "gba"; // default fallback
+    }
+  </script>
+</body>
+</html>
